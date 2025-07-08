@@ -35,7 +35,7 @@ gcloud services enable cloudbuild.googleapis.com
 Google provides prebuilt Gemma containers that you can deploy directly:
 
 ```bash
-# Deploy Gemma 3-4B to Cloud Run with GPU (takes 5-10 minutes)
+# Deploy Gemma 3-4B to Cloud Run with GPU (takes 5-10 minutes, secure by default)
 gcloud run deploy gemma-service \
    --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
    --concurrency 4 \
@@ -45,7 +45,7 @@ gcloud run deploy gemma-service \
    --gpu-type nvidia-l4 \
    --max-instances 1 \
    --memory 32Gi \
-   --allow-unauthenticated \
+   --no-allow-unauthenticated \
    --no-cpu-throttling \
    --timeout=600 \
    --region us-central1
@@ -69,8 +69,10 @@ echo "Gemma URL: $GEMMA_URL"
 ### Step 4: Test your LLM deployment
 
 ```bash
-# Test the API (wait 2-3 minutes for initialization)
-curl -X POST $GEMMA_URL/api/generate \
+# Test the API with authentication (wait 2-3 minutes for initialization)
+TOKEN=$(gcloud auth print-identity-token)
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST $GEMMA_URL/api/generate \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gemma3:4b",
@@ -107,11 +109,11 @@ The agent includes three main tools:
 ### Step 3: Deploy to Cloud Run
 
 ```bash
-# Deploy your agent
+# Deploy your agent (secure by default)
 gcloud run deploy hackathon-agent \
     --source . \
     --region us-central1 \
-    --allow-unauthenticated \
+    --no-allow-unauthenticated \
     --set-env-vars GEMMA_URL=$GEMMA_URL
 
 # Get your agent URL
@@ -119,11 +121,19 @@ export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-cent
 echo "Agent URL: $AGENT_URL"
 ```
 
-### Step 4: Test your agent
+## 🔐 Authentication Guide
+
+Since your services are deployed securely (recommended), here's how to authenticate:
+
+### For Testing Your Services
 
 ```bash
+# Get an authentication token
+TOKEN=$(gcloud auth print-identity-token)
+
 # Test the research tool
-curl -X POST "$AGENT_URL/api/tools/research_topic" \
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST "$AGENT_URL/api/tools/research_topic" \
   -H "Content-Type: application/json" \
   -d '{
     "topic": "artificial intelligence",
@@ -131,17 +141,82 @@ curl -X POST "$AGENT_URL/api/tools/research_topic" \
   }'
 
 # Test the trend analysis tool
-curl -X POST "$AGENT_URL/api/tools/analyze_trends" \
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST "$AGENT_URL/api/tools/analyze_trends" \
   -H "Content-Type: application/json" \
   -d '{
     "domain": "technology"
   }'
 
 # Test the question tool
-curl -X POST "$AGENT_URL/api/tools/ask_question" \
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST "$AGENT_URL/api/tools/ask_question" \
   -H "Content-Type: application/json" \
   -d '{
     "question": "How do neural networks work?"
+  }'
+```
+
+### For Python Applications
+
+If you need to modify your agent to make authenticated requests, here's how:
+
+```python
+import google.auth
+import google.auth.transport.requests
+from google.oauth2 import id_token
+import requests
+
+def get_id_token(cloud_run_url):
+    """
+    Generates an OIDC identity token for a given Cloud Run URL.
+    """
+    # Create an authentication request
+    auth_req = google.auth.transport.requests.Request()
+
+    # fetch_id_token will use the Application Default Credentials to get a token
+    # for the specified audience.
+    try:
+        identity_token = id_token.fetch_id_token(auth_req, cloud_run_url)
+        print("Successfully generated ID token.")
+        return identity_token
+    except Exception as e:
+        print(f"Error generating ID token: {e}")
+        return None
+
+# Set up the authorization header
+token = get_id_token(cloud_run_url)
+headers = {
+    "Authorization": f"Bearer {token}"
+}
+
+# Make the authenticated request
+response = requests.get(cloud_run_url, headers=headers)
+```
+
+### Alternative: Public Access (Less Secure)
+
+If you prefer to make your services publicly accessible (not recommended for production):
+
+```bash
+# Redeploy with public access
+gcloud run deploy gemma-service \
+   --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
+   --allow-unauthenticated \
+   --region us-central1
+
+gcloud run deploy hackathon-agent \
+    --source . \
+    --region us-central1 \
+    --allow-unauthenticated \
+    --set-env-vars GEMMA_URL=$GEMMA_URL
+
+# Test without authentication
+curl -X POST "$AGENT_URL/api/tools/research_topic" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "topic": "artificial intelligence",
+    "focus": "technical"
   }'
 ```
 
@@ -200,7 +275,7 @@ Please provide a clear and informative summary in 2-3 sentences."""
 gcloud run deploy hackathon-agent \
     --source . \
     --region us-central1 \
-    --allow-unauthenticated \
+    --no-allow-unauthenticated \
     --set-env-vars GEMMA_URL=$GEMMA_URL
 ```
 
@@ -210,7 +285,7 @@ gcloud run deploy hackathon-agent \
 
 Visit your agent's web interface:
 
-- **Agent Interface**: `$AGENT_URL/adk`
+- **Agent Interface**: `$AGENT_URL/adk` (you'll need to sign in with Google)
 - **API Documentation**: `$AGENT_URL/docs`
 - **Health Check**: `$AGENT_URL/health`
 
@@ -219,24 +294,33 @@ Visit your agent's web interface:
 Your agent exposes REST endpoints for each tool:
 
 ```bash
+# Get authentication token first
+TOKEN=$(gcloud auth print-identity-token)
+
 # Research API
-POST $AGENT_URL/api/tools/research_topic
-{
-  "topic": "quantum computing",
-  "focus": "business"
-}
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST $AGENT_URL/api/tools/research_topic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "topic": "quantum computing",
+    "focus": "business"
+  }'
 
 # Trends API
-POST $AGENT_URL/api/tools/analyze_trends
-{
-  "domain": "science"
-}
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST $AGENT_URL/api/tools/analyze_trends \
+  -H "Content-Type: application/json" \
+  -d '{
+    "domain": "science"
+  }'
 
 # Question API
-POST $AGENT_URL/api/tools/ask_question
-{
-  "question": "What are the benefits of serverless computing?"
-}
+curl -H "Authorization: Bearer ${TOKEN}" \
+  -X POST $AGENT_URL/api/tools/ask_question \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "What are the benefits of serverless computing?"
+  }'
 ```
 
 ## 📊 Part 5: Monitoring and Optimization
@@ -302,9 +386,10 @@ You've successfully:
 ### Common Issues
 
 1. **Agent can't connect to Gemma**: Verify your `GEMMA_URL` environment variable
-2. **Cold starts**: Set min-instances to 1 for both services
-3. **Out of memory**: Increase memory allocation in deployment commands
-4. **GPU quota**: Ensure you're using only 1 GPU per project
+2. **Authentication errors**: Make sure to use `gcloud auth print-identity-token` for testing
+3. **Cold starts**: Set min-instances to 1 for both services
+4. **Out of memory**: Increase memory allocation in deployment commands
+5. **GPU quota**: Ensure you're using only 1 GPU per project
 
 ### Getting Help
 

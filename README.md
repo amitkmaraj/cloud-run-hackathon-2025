@@ -7,7 +7,7 @@ Welcome to the ultimate Cloud Run hackathon experience! This repository contains
 By the end of this hackathon, you'll have:
 
 - ✅ **Deployed an LLM** (Gemma 3) to Cloud Run with GPU acceleration
-- ✅ **Built a custom AI agent** using the Agent Development Kit (ADK)
+- ✅ **Built a custom AI agent** using your preferred framework (ADK, LangChain, CrewAI, etc.)
 - ✅ **Deployed your agent** to Cloud Run with full monitoring and observability
 - ✅ **Created something amazing** that solves real-world problems
 
@@ -38,46 +38,25 @@ By the end of this hackathon, you'll have:
 
 ## 🎯 Core Requirements
 
-You must complete these three requirements to be eligible for prizes:
+You must complete these three requirements to be eligible for judging:
 
 ### 1. 🤖 Deploy LLM to Cloud Run with GPU
 
 - Deploy Gemma 3 to Cloud Run using GPU acceleration
-- Enable public access with `--allow-unauthenticated`
+- Use secure authentication (recommended) or public access
 - Test and verify the deployment works
 
-### 2. 🔧 Build Agent with ADK
+### 2. 🔧 Build an AI Agent
 
-- Create an AI agent using the Agent Development Kit
-- Integrate with your deployed LLM
-- Add custom tools and functionality
+- Create an AI agent using any framework (ADK, LangChain, CrewAI, etc.)
+- Integrate with your deployed LLM or other AI services
+- Add custom tools and functionality for your use case
 
 ### 3. 🚀 Deploy Agent to Cloud Run
 
 - Deploy your agent to Cloud Run
-- Ensure it's accessible via ADK web interface
+- Ensure it's accessible via web interface or API
 - Include monitoring and observability
-
-## 🏅 Prizes & Recognition
-
-### 🥇 Grand Prize: $2,000 + Cloud Credits
-
-Best overall project across all categories
-
-### 🥈 Cloud Run Excellence: $1,000 + Swag
-
-Best use of Cloud Run features and GPU capabilities
-
-### 🥉 Innovation Award: $500 + Mentorship
-
-Most creative and novel application
-
-### 🎖️ Special Recognition
-
-- Best Beginner Project
-- Best Team Collaboration
-- Most Impactful Solution
-- Best Technical Documentation
 
 ## 🛠️ Technology Stack
 
@@ -85,9 +64,16 @@ Most creative and novel application
 
 - **Google Cloud Run** - Serverless container platform
 - **Cloud Run GPUs** - NVIDIA L4 GPU acceleration
-- **Agent Development Kit (ADK)** - Google's agent framework
 - **Gemma 3** - Google's lightweight LLM
 - **Ollama** - Local LLM serving platform
+
+### Agent Frameworks (Choose One)
+
+- **Agent Development Kit (ADK)** - Google's agent framework
+- **LangChain** - Popular Python framework for LLM applications
+- **CrewAI** - Multi-agent orchestration framework
+- **AutoGen** - Microsoft's multi-agent conversation framework
+- **Custom Framework** - Build your own agent system
 
 ### Optional Integrations
 
@@ -116,8 +102,10 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 
 Perfect for getting up and running quickly:
 
+_Note: Our templates use ADK, but you can use any agent framework (LangChain, CrewAI, etc.)_
+
 ```bash
-# Deploy Gemma LLM with single command
+# Deploy Gemma LLM with single command (secure by default)
 export PROJECT_ID="your-project-id"
 gcloud config set project $PROJECT_ID
 
@@ -130,7 +118,7 @@ gcloud run deploy gemma-service \
    --gpu-type nvidia-l4 \
    --max-instances 1 \
    --memory 32Gi \
-   --allow-unauthenticated \
+   --no-allow-unauthenticated \
    --no-cpu-throttling \
    --timeout=600 \
    --region us-central1
@@ -142,7 +130,7 @@ for file in agent.py server.py Dockerfile pyproject.toml; do
 done
 
 export GEMMA_URL=$(gcloud run services describe gemma-service --region=us-central1 --format='value(status.url)')
-gcloud run deploy hackathon-agent --source . --region us-central1 --allow-unauthenticated --set-env-vars GEMMA_URL=$GEMMA_URL
+gcloud run deploy hackathon-agent --source . --region us-central1 --no-allow-unauthenticated --set-env-vars GEMMA_URL=$GEMMA_URL
 ```
 
 ### Option 2: Complete Tutorial (1 hour)
@@ -155,6 +143,8 @@ open HACKATHON_TUTORIAL.md
 ```
 
 ## 🎨 Project Ideas
+
+_Build these using any agent framework you prefer (ADK, LangChain, CrewAI, AutoGen, or your own)_
 
 ### 🔰 Beginner-Friendly
 
@@ -242,6 +232,9 @@ open HACKATHON_TUTORIAL.md
 
 - [Cloud Run Documentation](https://cloud.google.com/run/docs)
 - [ADK Documentation](https://google.github.io/adk-docs/)
+- [LangChain Documentation](https://python.langchain.com/)
+- [CrewAI Documentation](https://docs.crewai.com/)
+- [AutoGen Documentation](https://microsoft.github.io/autogen/)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/google-cloud-run)
 - [Google Cloud Community](https://cloud.google.com/support/community)
 
@@ -293,7 +286,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Google Cloud Team
 - AI Tinkerers NYC
 - Cloud Run Engineering
-- ADK Development Team
+- Agent Framework Communities
 
 **Sponsors & Partners**
 
@@ -313,9 +306,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Choose your path:
 
-1. **🏃 Quick Start** - [QUICKSTART_GUIDE.md](./QUICKSTART_GUIDE.md)
-2. **📚 Complete Tutorial** - [HACKATHON_TUTORIAL.md](./HACKATHON_TUTORIAL.md)
-3. **🛠️ Download Files** - All code is ready in [hackathon-templates/](./hackathon-templates/)
+1. **🏃 Quick Start** - [QUICKSTART_GUIDE.md](./QUICKSTART_GUIDE.md) _(uses ADK templates)_
+2. **📚 Complete Tutorial** - [HACKATHON_TUTORIAL.md](./HACKATHON_TUTORIAL.md) _(uses ADK examples)_
+3. **🛠️ Download Files** - All code is ready in [hackathon-templates/](./hackathon-templates/) _(ADK-based)_
+4. **🎨 Build Your Own** - Use LangChain, CrewAI, AutoGen, or any framework you prefer!
 
 **Remember**: The best project is the one you actually finish and demo! Start simple, iterate quickly, and have fun building something amazing.
 
