@@ -1,40 +1,35 @@
-# 🚀 Cloud Run Hackathon: Build and Deploy AI Agents
+# 🚀 Agentic AI App Hackathon with Google Cloud Run GPUs
 
-Welcome to the ultimate Cloud Run hackathon experience! This repository contains everything you need to build, deploy, and showcase AI agents on Google Cloud Run with GPU acceleration.
+Welcome to the **Agentic AI App Hackathon with Google Cloud Run GPUs**! Join us for a two-day hackathon event to build and deploy your own agentic applications on Google Cloud with Cloud Run, leveraging open models hosted on Cloud Run's serverless NVIDIA L4 GPUs.
+
+## 📅 Event Details
+
+**When:** July 19-20, 2025 (Saturday-Sunday)  
+**Time:** 8:00 AM - 2:00 PM EDT  
+**Location:** 29 Little W 12th St, New York, NY  
+**Attendees:** 304+ registered  
+**Host:** AI Tinkerers NYC
 
 ## 🎯 What You'll Build
 
-By the end of this hackathon, you'll have:
+Build and deploy agentic applications on Google Cloud with Cloud Run, leveraging these open models hosted on Cloud Run's serverless NVIDIA L4 GPUs:
 
-- ✅ **Deployed an LLM** (Gemma 3) to Cloud Run with GPU acceleration
-- ✅ **Built a custom AI agent** using your preferred framework (ADK, LangChain, CrewAI, etc.)
-- ✅ **Deployed your agent** to Cloud Run with full monitoring and observability
-- ✅ **Created something amazing** that solves real-world problems
+- ✅ **Gemma 3** (1B/4B/12B) - Google's lightweight LLM
+- ✅ **DeepSeek-r1 7B** - Advanced reasoning model
+- ✅ **Llama 2 7B** - Meta's popular language model
+- ✅ **Stable Diffusion XL (SDXL)** - Image generation model
+- ✅ **And more open models** available on Cloud Run GPUs
 
-## 🚀 Quick Start (30 minutes)
+**Each team gets one GPU allocated per Google Cloud project!**
 
-**New to hackathons?** Start here: [**QUICKSTART_GUIDE.md**](./QUICKSTART_GUIDE.md)
+## 🚀 Why Cloud Run GPUs?
 
-**Want the full experience?** Follow the complete: [**HACKATHON_TUTORIAL.md**](./HACKATHON_TUTORIAL.md)
+Developers love Cloud Run, Google Cloud's serverless runtime, for its simplicity, flexibility, and scalability. Now, with NVIDIA L4 GPU support, Cloud Run offers a powerful environment for AI inference, perfectly suited for lightweight open models hosted directly on our serverless GPUs.
 
-## 📚 Complete Guide Index
+## 🛠️ Repository Contents
 
-### 🎓 Learning Materials
-
-- [**HACKATHON_TUTORIAL.md**](./HACKATHON_TUTORIAL.md) - Complete step-by-step tutorial
 - [**QUICKSTART_GUIDE.md**](./QUICKSTART_GUIDE.md) - Get running in 30 minutes
-- [**PARTICIPANT_RESOURCES.md**](./PARTICIPANT_RESOURCES.md) - Tools, examples, and references
-
-### 🏆 Competition Details
-
-- [**JUDGING_CRITERIA.md**](./JUDGING_CRITERIA.md) - How you'll be evaluated
-- [**project-overview.md**](./project-overview.md) - Hackathon overview and requirements
-- [**core-requirements.md**](./core-requirements.md) - The three core requirements
-
-### 🛠️ Ready-to-Deploy Code
-
-- [**hackathon-templates/**](./hackathon-templates/) - Complete working agent and deployment files
-- [**researcher-agent/**](./researcher-agent/) - Example production-ready agent
+- [**hackathon-agent/**](./hackathon-agent/) - Complete working agent and deployment files
 
 ## 🎯 Core Requirements
 
@@ -42,21 +37,46 @@ You must complete these three requirements to be eligible for judging:
 
 ### 1. 🤖 Deploy LLM to Cloud Run with GPU
 
-- Deploy Gemma 3 to Cloud Run using GPU acceleration
+- Deploy one of the supported models (Gemma 3, DeepSeek-r1, Llama 2, SDXL, etc.) to Cloud Run using GPU acceleration
 - Use secure authentication (recommended) or public access
 - Test and verify the deployment works
 
-### 2. 🔧 Build an AI Agent
+### 2. 🔧 Build an Agentic Application
 
-- Create an AI agent using any framework (ADK, LangChain, CrewAI, etc.)
+- Create an agentic AI application using any framework (ADK, LangChain, CrewAI, etc.)
 - Integrate with your deployed LLM or other AI services
-- Add custom tools and functionality for your use case
+- Add autonomous behavior and decision-making capabilities
+- Focus on solving real-world problems
 
-### 3. 🚀 Deploy Agent to Cloud Run
+### 3. 🚀 Deploy Application to Cloud Run
 
-- Deploy your agent to Cloud Run
+- Deploy your agentic application to Cloud Run
 - Ensure it's accessible via web interface or API
 - Include monitoring and observability
+
+## 📅 Schedule
+
+### Day 1 - July 19 (Saturday)
+
+| Time              | Activity                                         |
+| ----------------- | ------------------------------------------------ |
+| 8:00 AM           | Doors open · Registration                        |
+| 9:00 AM           | Opening and Cloud Run Serverless GPU walkthrough |
+| 10:00 AM          | Team-formation lock-in Session                   |
+| 12:00 PM          | Lunch                                            |
+| 1:00 PM - 6:00 PM | Mentoring available (sponsors & judges)          |
+| 6:00 PM           | Dinner break                                     |
+| 8:00 PM           | Day-one doors close                              |
+
+### Day 2 - July 20 (Sunday)
+
+| Time     | Activity                                                                                       |
+| -------- | ---------------------------------------------------------------------------------------------- |
+| 8:00 AM  | Doors open                                                                                     |
+| 9:00 AM  | Breakfast & networking                                                                         |
+| 10:00 AM | Project submission deadline · Judging starts (live demos from teams who make the final rounds) |
+| 1:15 PM  | Awards & closing ceremony                                                                      |
+| 2:00 PM  | Farewell networking                                                                            |
 
 ## 🛠️ Technology Stack
 
@@ -64,8 +84,8 @@ You must complete these three requirements to be eligible for judging:
 
 - **Google Cloud Run** - Serverless container platform
 - **Cloud Run GPUs** - NVIDIA L4 GPU acceleration
-- **Gemma 3** - Google's lightweight LLM
-- **Ollama** - Local LLM serving platform
+- **Serverless AI Models** - Gemma 3, DeepSeek-r1, Llama 2, SDXL, and more
+- **Agentic Frameworks** - Build autonomous, decision-making applications
 
 ### Agent Frameworks (Choose One)
 
@@ -82,90 +102,30 @@ You must complete these three requirements to be eligible for judging:
 - **Cloud Trace** - Performance monitoring
 - **Streamlit/Gradio** - Web UI frameworks
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-```bash
-# Install Google Cloud SDK
-curl https://sdk.cloud.google.com | bash
-
-# Authenticate and set project
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-
-# Enable required APIs
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com
-```
-
-### Option 1: Quick Start (30 minutes)
-
-Perfect for getting up and running quickly:
-
-_Note: Our templates use ADK, but you can use any agent framework (LangChain, CrewAI, etc.)_
-
-```bash
-# Deploy Gemma LLM with single command (secure by default)
-export PROJECT_ID="your-project-id"
-gcloud config set project $PROJECT_ID
-
-gcloud run deploy gemma-service \
-   --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
-   --concurrency 4 \
-   --cpu 8 \
-   --set-env-vars OLLAMA_NUM_PARALLEL=4 \
-   --gpu 1 \
-   --gpu-type nvidia-l4 \
-   --max-instances 1 \
-   --memory 32Gi \
-   --no-allow-unauthenticated \
-   --no-cpu-throttling \
-   --timeout=600 \
-   --region us-central1
-
-# Deploy your agent
-mkdir hackathon-agent && cd hackathon-agent
-for file in agent.py server.py Dockerfile pyproject.toml; do
-  curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/$file
-done
-
-export GEMMA_URL=$(gcloud run services describe gemma-service --region=us-central1 --format='value(status.url)')
-gcloud run deploy hackathon-agent --source . --region us-central1 --no-allow-unauthenticated --set-env-vars GEMMA_URL=$GEMMA_URL
-```
-
-### Option 2: Complete Tutorial (1 hour)
-
-For full understanding and customization:
-
-```bash
-# Follow the complete tutorial
-open HACKATHON_TUTORIAL.md
-```
-
 ## 🎨 Project Ideas
 
-_Build these using any agent framework you prefer (ADK, LangChain, CrewAI, AutoGen, or your own)_
+_Build agentic applications using any framework you prefer (ADK, LangChain, CrewAI, AutoGen, or your own)_
 
 ### 🔰 Beginner-Friendly
 
-- **Smart FAQ Bot** - Answer questions about your domain
-- **Content Summarizer** - Summarize articles, papers, or documents
-- **Code Reviewer** - Analyze code and provide feedback
-- **Meeting Assistant** - Process meeting notes and action items
+- **Autonomous Customer Support Agent** - AI that can handle complex inquiries and escalate when needed
+- **Smart Content Moderator** - Agent that analyzes and categorizes content automatically
+- **Intelligent Task Scheduler** - Agent that optimizes workflows and resource allocation
+- **Adaptive Learning Assistant** - Agent that adjusts teaching methods based on student progress
 
 ### 🌟 Intermediate
 
-- **Research Assistant** - Multi-step research with web search
-- **Data Analyzer** - Process and visualize datasets
-- **Creative Writer** - Generate stories, poems, or scripts
-- **Language Tutor** - Interactive language learning
+- **Multi-Modal Research Agent** - Combines text, image, and data analysis capabilities
+- **Autonomous Code Reviewer** - Agent that analyzes, tests, and suggests improvements
+- **Dynamic Pricing Agent** - Real-time market analysis and pricing optimization
+- **Intelligent Customer Journey Agent** - Personalizes experiences across touchpoints
 
 ### 🚀 Advanced
 
-- **Autonomous Workflow** - Chain multiple agents together
-- **Multi-Modal Agent** - Process text, images, and audio
-- **Real-Time Assistant** - Handle streaming data and events
-- **Collaborative System** - Multiple agents working together
+- **Autonomous Business Process Manager** - Orchestrates complex workflows across systems
+- **Self-Healing Infrastructure Agent** - Monitors and automatically fixes system issues
+- **Adaptive Security Agent** - Continuously learns and responds to threats
+- **Collaborative Multi-Agent System** - Multiple specialized agents working together
 
 ## 📊 Example Architecture
 
@@ -190,12 +150,13 @@ _Build these using any agent framework you prefer (ADK, LangChain, CrewAI, AutoG
 - 🔧 Clean, well-structured code
 - 🛡️ Proper error handling and security
 - 📈 Performance optimization
+- 🤖 Effective use of agentic capabilities
 
 ### Innovation & Creativity (25%)
 
-- 💡 Novel use of Cloud Run capabilities
+- 💡 Novel use of Cloud Run GPU capabilities
 - 🎨 Creative problem-solving
-- 🌟 Unique features and functionality
+- 🌟 Unique agentic behaviors and functionality
 - 🎯 Great user experience
 
 ### Cloud Run Utilization (20%)
@@ -223,14 +184,15 @@ _Build these using any agent framework you prefer (ADK, LangChain, CrewAI, AutoG
 
 ### During the Hackathon
 
-- **💬 Slack**: #cloud-run-hackathon channel
-- **🙋 Mentors**: Available at help stations
-- **⏰ Office Hours**: Scheduled Q&A sessions
+- **🙋 Mentors**: Available July 19, 1:00 PM - 6:00 PM
+- **👥 Sponsors & Judges**: On-site support and guidance
 - **📖 Documentation**: All guides in this repository
+- **🤝 Team Formation**: Saturday morning lock-in session
 
 ### Online Resources
 
 - [Cloud Run Documentation](https://cloud.google.com/run/docs)
+- [Gemma on Cloud Run Cookbook](https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md) - Complete guide to deploying different Gemma models on Cloud Run
 - [ADK Documentation](https://google.github.io/adk-docs/)
 - [LangChain Documentation](https://python.langchain.com/)
 - [CrewAI Documentation](https://docs.crewai.com/)
@@ -238,26 +200,12 @@ _Build these using any agent framework you prefer (ADK, LangChain, CrewAI, AutoG
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/google-cloud-run)
 - [Google Cloud Community](https://cloud.google.com/support/community)
 
-## 📅 Timeline
-
-### Day 1
-
-- **Morning**: Setup and tutorials
-- **Afternoon**: Core requirements implementation
-- **Evening**: Technical review checkpoint
-
-### Day 2
-
-- **Morning**: Feature development and testing
-- **Afternoon**: Presentations and demos
-- **Evening**: Judging and awards ceremony
-
 ## 🎉 Success Stories
 
 This hackathon builds on the success of previous Cloud Run events where participants have:
 
-- 🚀 Built production-ready applications
-- 💼 Started successful startups
+- 🚀 Built production-ready agentic applications
+- 💼 Started successful AI-powered startups
 - 🏆 Won major prizes and recognition
 - 🤝 Formed lasting professional relationships
 
@@ -283,16 +231,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Organizers**
 
-- Google Cloud Team
 - AI Tinkerers NYC
+- Google Cloud Team
 - Cloud Run Engineering
-- Agent Framework Communities
 
 **Sponsors & Partners**
 
 - Google Cloud
 - NVIDIA
-- Betaworks (Venue)
+- AI Tinkerers NYC Community
 
 **Special Thanks**
 
@@ -304,17 +251,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🚀 Ready to Start?
 
-Choose your path:
+**Get started now**: [QUICKSTART_GUIDE.md](./QUICKSTART_GUIDE.md)
 
-1. **🏃 Quick Start** - [QUICKSTART_GUIDE.md](./QUICKSTART_GUIDE.md) _(uses ADK templates)_
-2. **📚 Complete Tutorial** - [HACKATHON_TUTORIAL.md](./HACKATHON_TUTORIAL.md) _(uses ADK examples)_
-3. **🛠️ Download Files** - All code is ready in [hackathon-templates/](./hackathon-templates/) _(ADK-based)_
-4. **🎨 Build Your Own** - Use LangChain, CrewAI, AutoGen, or any framework you prefer!
+**Remember**: The best project is the one you actually finish and demo! Start simple, iterate quickly, and have fun building something amazing with agentic AI.
 
-**Remember**: The best project is the one you actually finish and demo! Start simple, iterate quickly, and have fun building something amazing.
-
-**Good luck, and may the best agent win!** 🏆
+**Good luck, and may the best agentic application win!** 🏆
 
 ---
 
-_Built with ❤️ by the Google Cloud and AI Tinkerers communities_
+_Built with ❤️ by the AI Tinkerers NYC and Google Cloud communities_

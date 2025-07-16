@@ -163,14 +163,14 @@ def generate_code(description: str, language: str) -> Dict[str, Any]:
         
         prompt = f"""Please generate {language} code based on this description:
 
-{description}
+        {description}
 
-Please provide:
-1. Clean, well-commented code
-2. A brief explanation of how it works
-3. Any important notes or considerations
+        Please provide:
+        1. Clean, well-commented code
+        2. A brief explanation of how it works
+        3. Any important notes or considerations
 
-Format your response with the code in a code block and explanation afterwards."""
+        Format your response with the code in a code block and explanation afterwards."""
         
         response = client.query_gemma(prompt, temperature=0.5)
         
@@ -204,12 +204,12 @@ def brainstorm_ideas(topic: str, num_ideas: int) -> Dict[str, Any]:
         
         prompt = f"""Please brainstorm {num_ideas} creative and practical ideas for: {topic}
 
-For each idea, provide:
-1. A clear title
-2. A brief description
-3. Why it would be useful or interesting
+        For each idea, provide:
+        1. A clear title
+        2. A brief description
+        3. Why it would be useful or interesting
 
-Format your response as a numbered list with clear structure."""
+        Format your response as a numbered list with clear structure."""
         
         response = client.query_gemma(prompt, temperature=0.8)
         
@@ -251,13 +251,13 @@ def explain_concept(concept: str, level: str) -> Dict[str, Any]:
         
         prompt = f"""Please explain the concept of "{concept}" {level_desc}.
 
-Structure your explanation with:
-1. A clear definition
-2. Key characteristics or components
-3. Real-world examples or applications
-4. Why it's important or relevant
+            Structure your explanation with:
+            1. A clear definition
+            2. Key characteristics or components
+            3. Real-world examples or applications
+            4. Why it's important or relevant
 
-Keep the explanation engaging and informative."""
+            Keep the explanation engaging and informative."""
         
         response = client.query_gemma(prompt, temperature=0.6)
         
@@ -282,14 +282,14 @@ root_agent = Agent(
     model="gemini-2.5-flash",
     instruction="""You are a helpful AI assistant designed for the Cloud Run Hackathon. 
 
-You can help participants by:
-1. Answering questions and providing information on various topics
-2. Generating code in different programming languages
-3. Brainstorming creative ideas for projects
-4. Explaining complex concepts at different levels of detail
+        You can help participants by:
+        1. Answering questions and providing information on various topics
+        2. Generating code in different programming languages
+        3. Brainstorming creative ideas for projects
+        4. Explaining complex concepts at different levels of detail
 
-You have access to a deployed Gemma model that you can query for additional insights and information. Always try to be helpful, creative, and supportive of hackathon participants' goals.
+        You have access to a deployed Gemma model that you can query for additional insights and information. Always try to be helpful, creative, and supportive of hackathon participants' goals.
 
-Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining the conversational interface through your own capabilities.""",
+        Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining the conversational interface through your own capabilities.""",
     tools=[ask_gemma, generate_code, brainstorm_ideas, explain_concept],
 ) 

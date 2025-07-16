@@ -5,11 +5,15 @@
 ## ⚡ Prerequisites (5 minutes)
 
 ```bash
-# 1. Set your project ID
+# 1. Install Google Cloud SDK (if not already installed)
+curl https://sdk.cloud.google.com | bash
+
+# 2. Authenticate and set project
+gcloud auth login
 export PROJECT_ID="your-project-id"
 gcloud config set project $PROJECT_ID
 
-# 2. Enable APIs
+# 3. Enable required APIs
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 ```
 
@@ -30,11 +34,14 @@ gcloud run deploy ollama-gemma \
     --no-allow-unauthenticated \
     --no-cpu-throttling \
     --timeout=600 \
-    --region us-central1
+    --region us-central1 \
+    --labels dev-tutorial=nyc-hack-cloud-run-gpu-25
 
 # Get your Gemma URL
 export GEMMA_URL=$(gcloud run services describe ollama-gemma --region=us-central1 --format='value(status.url)')
 echo "🎉 Gemma deployed at: $GEMMA_URL"
+
+💡 **Want to explore other Gemma deployment options?** Check out the [Gemma on Cloud Run Cookbook](https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md) for different model sizes and deployment configurations.
 ```
 
 ## 🧪 Test Gemma Service (5 minutes)
@@ -61,12 +68,9 @@ If you get a response, your Gemma service is working correctly! Keep the proxy r
 ## 🛠️ Deploy Your Agent (10 minutes)
 
 ```bash
-# 1. Download the complete agent files
-mkdir hackathon-agent && cd hackathon-agent
-curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/agent.py
-curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/server.py
-curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/Dockerfile
-curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/pyproject.toml
+# 1. Clone the hackathon repository
+git clone https://github.com/amitkmaraj/cloud-run-hackathon-2025.git
+cd cloud-run-hackathon-2025/hackathon-agent
 
 # 2. Create .env file with your configuration
 cat > .env << EOF
@@ -98,7 +102,7 @@ gcloud run deploy hackathon-agent \
 
 # 5. Get your agent URL
 export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-central1 --format='value(status.url)')
-echo "�� Agent deployed at: $AGENT_URL"
+echo "🎉 Agent deployed at: $AGENT_URL"
 ```
 
 ## 🧪 Test Your Agent (5 minutes)
