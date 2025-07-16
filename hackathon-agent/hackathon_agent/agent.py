@@ -13,16 +13,15 @@
 # limitations under the License.
 
 import os
-import asyncio
 from pathlib import Path
 from typing import Dict, Any
 
-import httpx
-import google.auth
-import google.auth.transport.requests
-from google.oauth2 import id_token
+from google import genai
+from google.genai.types import HttpOptions
 from dotenv import load_dotenv
 from google.adk.agents import Agent
+import google.auth.transport.requests
+import google.oauth2.id_token
 
 # Load environment variables from .env file in root directory
 root_dir = Path(__file__).parent.parent
@@ -31,55 +30,66 @@ load_dotenv(dotenv_path=dotenv_path)
 
 
 class GemmaClient:
-    """Client for interacting with the deployed Gemma model."""
+    """Client for interacting with the deployed Gemma model using GenAI SDK."""
 
-    def __init__(self, gemma_url: str):
+    def __init__(self, gemma_url: str, api_key: str):
         self.gemma_url = gemma_url.rstrip('/')
-        self.client = httpx.AsyncClient(timeout=30.0)
+        self.api_key = api_key
+        self.model_name = "gemma-3n-e4b-it"
+        
+        # Get authentication headers for Cloud Run service-to-service calls
+        auth_headers = self._get_auth_headers()
 
-    async def get_auth_headers(self) -> Dict[str, str]:
+        print("auth headers", auth_headers)
+        
+        # Configure the client to use Cloud Run endpoint with authentication headers
+        self.client = genai.Client(
+            api_key=self.api_key,
+            http_options=HttpOptions(
+                base_url=self.gemma_url,
+                headers=auth_headers
+            )
+        )
+
+    def _get_auth_headers(self) -> Dict[str, str]:
         """Get authentication headers for Cloud Run service-to-service calls."""
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "hackathon-agent/1.0"
+        }
         
         # Try to get identity token for authenticated requests
         try:
             auth_req = google.auth.transport.requests.Request()
-            identity_token = id_token.fetch_id_token(auth_req, self.gemma_url)
-            headers["Authorization"] = f"Bearer {identity_token}"
-        except Exception:
-            # If authentication fails, proceed without auth (for local testing)
+            id_token = google.oauth2.id_token.fetch_id_token(auth_req, self.gemma_url)
+            headers["Authorization"] = f"Bearer {id_token}"
+            print(f"Added Authorization header with identity token")
+        except Exception as e:
+            print(f"Warning: Could not get identity token: {e}")
+            # If authentication fails, proceed without auth header (for local testing)
             pass
             
         return headers
 
-    async def query_gemma(self, prompt: str, temperature: float = 0.7) -> str:
+    def query_gemma(self, prompt: str, temperature: float = 0.7) -> str:
         """Query the deployed Gemma model."""
         try:
-            request_data = {
-                "model": "gemma3:4b",
-                "prompt": prompt,
-                "stream": False,
-                "temperature": temperature
-            }
+            print("gemma url", self.gemma_url)
+            print("using model", self.model_name)
             
-            headers = await self.get_auth_headers()
-            
-            response = await self.client.post(
-                f"{self.gemma_url}/api/generate",
-                json=request_data,
-                headers=headers
+            # Generate content using the GenAI SDK
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=[prompt],
+                config=genai.types.GenerateContentConfig(
+                    temperature=temperature
+                )
             )
-            response.raise_for_status()
             
-            result = response.json()
-            return result.get("response", "No response from model")
+            return response.text if response.text else "No response from model"
             
         except Exception as e:
             return f"Error querying Gemma: {str(e)}"
-
-    async def close(self):
-        """Close the HTTP client."""
-        await self.client.aclose()
 
 
 # Global Gemma client instance
@@ -91,13 +101,18 @@ def get_gemma_client() -> GemmaClient:
     global gemma_client
     if gemma_client is None:
         gemma_url = os.getenv("GEMMA_URL")
+        api_key = os.getenv("GOOGLE_API_KEY")
+        
         if not gemma_url:
             raise ValueError("GEMMA_URL environment variable is required")
-        gemma_client = GemmaClient(gemma_url)
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable is required")
+            
+        gemma_client = GemmaClient(gemma_url, api_key)
     return gemma_client
 
 
-def ask_gemma(question: str, context: str = "") -> Dict[str, Any]:
+def ask_gemma(question: str, context: str) -> Dict[str, Any]:
     """Ask a question to the deployed Gemma model.
 
     Args:
@@ -116,13 +131,7 @@ def ask_gemma(question: str, context: str = "") -> Dict[str, Any]:
         else:
             prompt = f"Question: {question}\n\nPlease provide a helpful and informative answer."
         
-        # Since we're in a synchronous function, we need to run the async query
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            response = loop.run_until_complete(client.query_gemma(prompt, temperature=0.7))
-        finally:
-            loop.close()
+        response = client.query_gemma(prompt, temperature=0.7)
         
         return {
             "status": "success",
@@ -139,12 +148,12 @@ def ask_gemma(question: str, context: str = "") -> Dict[str, Any]:
         }
 
 
-def generate_code(description: str, language: str = "python") -> Dict[str, Any]:
+def generate_code(description: str, language: str) -> Dict[str, Any]:
     """Generate code based on a description using Gemma.
 
     Args:
         description (str): Description of what the code should do
-        language (str): Programming language (default: python)
+        language (str): Programming language
 
     Returns:
         Dict[str, Any]: Generated code with explanation
@@ -163,12 +172,7 @@ Please provide:
 
 Format your response with the code in a code block and explanation afterwards."""
         
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            response = loop.run_until_complete(client.query_gemma(prompt, temperature=0.5))
-        finally:
-            loop.close()
+        response = client.query_gemma(prompt, temperature=0.5)
         
         return {
             "status": "success",
@@ -185,12 +189,12 @@ Format your response with the code in a code block and explanation afterwards.""
         }
 
 
-def brainstorm_ideas(topic: str, num_ideas: int = 5) -> Dict[str, Any]:
+def brainstorm_ideas(topic: str, num_ideas: int) -> Dict[str, Any]:
     """Brainstorm creative ideas for a given topic using Gemma.
 
     Args:
         topic (str): The topic to brainstorm ideas for
-        num_ideas (int): Number of ideas to generate (default: 5)
+        num_ideas (int): Number of ideas to generate
 
     Returns:
         Dict[str, Any]: List of brainstormed ideas
@@ -207,12 +211,7 @@ For each idea, provide:
 
 Format your response as a numbered list with clear structure."""
         
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            response = loop.run_until_complete(client.query_gemma(prompt, temperature=0.8))
-        finally:
-            loop.close()
+        response = client.query_gemma(prompt, temperature=0.8)
         
         return {
             "status": "success",
@@ -229,7 +228,7 @@ Format your response as a numbered list with clear structure."""
         }
 
 
-def explain_concept(concept: str, level: str = "intermediate") -> Dict[str, Any]:
+def explain_concept(concept: str, level: str) -> Dict[str, Any]:
     """Explain a concept at different levels of complexity.
 
     Args:
@@ -260,12 +259,7 @@ Structure your explanation with:
 
 Keep the explanation engaging and informative."""
         
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            response = loop.run_until_complete(client.query_gemma(prompt, temperature=0.6))
-        finally:
-            loop.close()
+        response = client.query_gemma(prompt, temperature=0.6)
         
         return {
             "status": "success",

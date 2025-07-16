@@ -16,8 +16,8 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 ## 🤖 Deploy Gemma LLM (10 minutes)
 
 ```bash
-# 1. Deploy Gemma 3-4B directly to Cloud Run with one command (secure by default)
-gcloud run deploy gemma-service \
+# Deploy Gemma 3-4B directly to Cloud Run with one command (secure by default)
+gcloud run deploy ollama-gemma \
     --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3n-e4b \
     --concurrency 4 \
     --cpu 8 \
@@ -32,10 +32,31 @@ gcloud run deploy gemma-service \
     --timeout=600 \
     --region us-central1
 
-# 2. Get your Gemma URL
-export GEMMA_URL=$(gcloud run services describe gemma-service --region=us-central1 --format='value(status.url)')
+# Get your Gemma URL
+export GEMMA_URL=$(gcloud run services describe ollama-gemma --region=us-central1 --format='value(status.url)')
 echo "🎉 Gemma deployed at: $GEMMA_URL"
 ```
+
+## 🧪 Test Gemma Service (5 minutes)
+
+Before deploying the hackathon agent, let's test the Gemma service to make sure it's working:
+
+```bash
+# Start the proxy (choose Y when prompted to install cloud-run-proxy component)
+gcloud run services proxy ollama-gemma --port=9090
+```
+
+In a separate terminal tab, test the service:
+
+```bash
+# Send a request to test the Gemma service
+curl http://localhost:9090/api/generate -d '{
+  "model": "gemma3n:e4b",
+  "prompt": "Why is the sky blue?"
+}'
+```
+
+If you get a response, your Gemma service is working correctly! Keep the proxy running and continue in the original terminal.
 
 ## 🛠️ Deploy Your Agent (10 minutes)
 
@@ -47,121 +68,87 @@ curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/
 curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/Dockerfile
 curl -O https://raw.githubusercontent.com/GoogleCloudPlatform/devrel-demos/main/hackathon-templates/pyproject.toml
 
-# 2. Deploy to Cloud Run (secure by default)
+# 2. Create .env file with your configuration
+cat > .env << EOF
+GEMMA_URL=$GEMMA_URL
+GOOGLE_CLOUD_PROJECT=your-project-id
+GOOGLE_CLOUD_LOCATION=us-central1
+GOOGLE_GENAI_USE_VERTEXAI=FALSE
+GOOGLE_API_KEY=your-google-api-key
+EOF
+
+echo "⚠️  Please edit .env file and update the following values:"
+echo "   - GOOGLE_CLOUD_PROJECT: Set to your actual project ID"
+echo "   - GOOGLE_API_KEY: Set to your actual Google API key"
+echo "   - GEMMA_URL: Already set to $GEMMA_URL"
+
+# 3. Export environment variables from .env file
+export $(cat .env | xargs)
+
+# 4. Deploy to Cloud Run (secure by default)
 gcloud run deploy hackathon-agent \
     --source . \
     --region us-central1 \
     --no-allow-unauthenticated \
-    --set-env-vars GEMMA_URL=$GEMMA_URL
+    --set-env-vars GEMMA_URL=$GEMMA_URL \
+    --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT \
+    --set-env-vars GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION \
+    --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI \
+    --set-env-vars GOOGLE_API_KEY=$GOOGLE_API_KEY
 
-# 3. Get your agent URL
+# 5. Get your agent URL
 export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-central1 --format='value(status.url)')
-echo "🎉 Agent deployed at: $AGENT_URL"
+echo "�� Agent deployed at: $AGENT_URL"
 ```
 
-## 🔐 Authentication (Required for Testing)
+## 🧪 Test Your Agent (5 minutes)
 
-Since your services are deployed securely (recommended), you need to authenticate to test them:
-
-### Option 1: Command Line Testing
+Now let's test your hackathon agent:
 
 ```bash
-# 1. Get an authentication token
+# Start the proxy for your agent
+gcloud run services proxy hackathon-agent --port=8080
+```
+
+In a separate terminal tab, you can now access your agent through ADK web interface:
+
+```bash
+# Open your agent in the browser
+echo "🌐 Open your agent at: http://localhost:8080"
+```
+
+## 🔐 Authentication Notes
+
+Your services are deployed securely (recommended) with authentication required. The proxy commands automatically handle authentication for local testing.
+
+For production use or direct API calls, you'll need to include authentication tokens:
+
+```bash
+# Get an authentication token
 TOKEN=$(gcloud auth print-identity-token)
 
-# 2. Test your agent with authentication
+# Use in direct API calls
 curl -H "Authorization: Bearer ${TOKEN}" \
-  -X POST "$AGENT_URL/api/tools/research_topic" \
+  -X POST "${AGENT_URL}/api/tools/ask_gemma" \
   -H "Content-Type: application/json" \
-  -d '{"topic": "artificial intelligence", "focus": "technical"}'
-```
-
-### Option 2: Python Code (For Your Agent)
-
-Your agent template is already set up to handle authentication automatically. If you want to modify it, here's how authentication works:
-
-```python
-import google.auth
-import google.auth.transport.requests
-from google.oauth2 import id_token
-import requests
-
-def get_id_token(cloud_run_url):
-    """
-    Generates an OIDC identity token for a given Cloud Run URL.
-    """
-    # Create an authentication request
-    auth_req = google.auth.transport.requests.Request()
-
-    # fetch_id_token will use the Application Default Credentials to get a token
-    # for the specified audience.
-    try:
-        identity_token = id_token.fetch_id_token(auth_req, cloud_run_url)
-        print("Successfully generated ID token.")
-        return identity_token
-    except Exception as e:
-        print(f"Error generating ID token: {e}")
-        return None
-
-# Use the token in requests
-token = get_id_token(GEMMA_URL)
-headers = {
-    "Authorization": f"Bearer {token}"
-}
-
-# Make the authenticated request
-response = requests.get(cloud_run_url, headers=headers)
-```
-
-## ✅ Test Everything Works (5 minutes)
-
-```bash
-# Test your agent with authentication
-TOKEN=$(gcloud auth print-identity-token)
-curl -H "Authorization: Bearer ${TOKEN}" \
-  -X POST "$AGENT_URL/api/tools/research_topic" \
-  -H "Content-Type: application/json" \
-  -d '{"topic": "artificial intelligence", "focus": "technical"}'
-
-# Visit the web interface (you'll need to sign in with Google)
-echo "🌐 Open your agent at: $AGENT_URL/adk"
-```
-
-## 🔓 Alternative: Public Access (Not Recommended)
-
-If you prefer public access (less secure), you can redeploy with `--allow-unauthenticated`:
-
-```bash
-# Redeploy Gemma with public access
-gcloud run deploy gemma-service \
-   --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
-   --allow-unauthenticated \
-   --region us-central1
-
-# Redeploy agent with public access
-gcloud run deploy hackathon-agent \
-    --source . \
-    --region us-central1 \
-    --allow-unauthenticated \
-    --set-env-vars GEMMA_URL=$GEMMA_URL
-
-# Test without authentication
-curl -X POST "$AGENT_URL/api/tools/research_topic" \
-  -H "Content-Type: application/json" \
-  -d '{"topic": "artificial intelligence", "focus": "technical"}'
+  -d '{
+    "question": "What is serverless computing?",
+    "context": "Im building a web application"
+  }'
 ```
 
 ## 🎯 Next Steps
 
 1. **Customize your agent** - Edit `agent.py` to add your own tools
-2. **Test locally** - Set `GEMMA_URL` and run `uv run python server.py`
+2. **Test locally** - Set environment variables and run `uv run python server.py`
 3. **Add features** - Extend with new capabilities for your domain
 4. **Build something amazing!** 🚀
 
 ## 🆘 Need Help?
 
-- Check the full [HACKATHON_TUTORIAL.md](./HACKATHON_TUTORIAL.md) for detailed instructions
-- Visit `$AGENT_URL/docs` to see your agent's API documentation
+- Check that your .env file has the correct values
+- Make sure both proxy commands are running in separate terminals
+- Visit `http://localhost:8080/docs` to see your agent's API documentation when the proxy is running
 - Ask mentors for help with deployment issues
 
 **Ready to hack!** 🎉
