@@ -5,9 +5,7 @@ Welcome to the **Agentic AI App Hackathon with Google Cloud Run GPUs**! Join us 
 ## 📅 Event Details
 
 **When:** July 19-20, 2025 (Saturday-Sunday)  
-**Time:** 8:00 AM - 2:00 PM EDT  
 **Location:** 29 Little W 12th St, New York, NY  
-**Attendees:** 304+ registered  
 **Host:** AI Tinkerers NYC
 
 ## 🎯 What You'll Build
