@@ -25,7 +25,6 @@ gcloud run deploy gemma-service \
     --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3n-e4b \
     --concurrency 4 \
     --cpu 8 \
-    --set-env-vars OLLAMA_NUM_PARALLEL=4 \
     --set-env-vars=API_KEY={YOUR_API_KEY} \
     --gpu 1 \
     --gpu-type nvidia-l4 \
