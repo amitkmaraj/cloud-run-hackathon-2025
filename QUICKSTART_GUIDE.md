@@ -21,7 +21,7 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 
 ```bash
 # Deploy Gemma 3-4B directly to Cloud Run with one command (secure by default)
-gcloud run deploy ollama-gemma \
+gcloud run deploy gemma-service \
     --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3n-e4b \
     --concurrency 4 \
     --cpu 8 \
@@ -38,7 +38,7 @@ gcloud run deploy ollama-gemma \
     --labels dev-tutorial=nyc-hack-cloud-run-gpu-25
 
 # Get your Gemma URL
-export GEMMA_URL=$(gcloud run services describe ollama-gemma --region=us-central1 --format='value(status.url)')
+export GEMMA_URL=$(gcloud run services describe gemma-service --region=us-central1 --format='value(status.url)')
 echo "🎉 Gemma deployed at: $GEMMA_URL"
 
 💡 **Want to explore other Gemma deployment options?** Check out the [Gemma on Cloud Run Cookbook](https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md) for different model sizes and deployment configurations.
@@ -50,7 +50,7 @@ Before deploying the hackathon agent, let's test the Gemma service to make sure 
 
 ```bash
 # Start the proxy (choose Y when prompted to install cloud-run-proxy component)
-gcloud run services proxy ollama-gemma --port=9090
+gcloud run services proxy gemma-service --port=9090
 ```
 
 In a separate terminal tab, test the service:
