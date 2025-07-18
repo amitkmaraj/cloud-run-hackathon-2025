@@ -52,7 +52,7 @@ RUN ollama serve & sleep 5 && ollama pull $MODEL
 ENTRYPOINT ["ollama", "serve"]
 ```
 
-## 🤖 Deploy Your Gemma LLM (10 minutes)
+## 🤖 Deploy Your Gemma LLM (10-15 minutes)
 
 ```bash
 # Deploy Gemma 3-1B directly to Cloud Run with one command (secure by default)
@@ -74,9 +74,9 @@ gcloud run deploy gemma-service \
 # Get your Gemma URL
 export GEMMA_URL=$(gcloud run services describe gemma-service --format='value(status.url)')
 echo "🎉 Gemma deployed at: $GEMMA_URL"
+```
 
 💡 **Want to explore other Gemma deployment options?** Check out the [Gemma on Cloud Run Cookbook](https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md) for different model sizes and deployment configurations.
-```
 
 ## 🧪 Test Gemma Service (5 minutes)
 
