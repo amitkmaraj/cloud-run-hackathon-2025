@@ -69,7 +69,7 @@ gcloud run deploy gemma-service \
     --no-cpu-throttling \
     --no-gpu-zonal-redundancy \
     --timeout=600 \
-    --labels dev-tutorial=nyc-hack-cloud-run-gpu-25
+    --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
 # Get your Gemma URL
 export GEMMA_URL=$(gcloud run services describe gemma-service --format='value(status.url)')
