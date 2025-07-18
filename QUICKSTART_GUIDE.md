@@ -128,6 +128,7 @@ gcloud run deploy hackathon-agent \
     --source . \
     --region us-central1 \
     --no-allow-unauthenticated \
+    --memory=4Gi \
     --set-env-vars GEMMA_URL=$GEMMA_URL \
     --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT \
     --set-env-vars GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION \
