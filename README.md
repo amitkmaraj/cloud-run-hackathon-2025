@@ -23,29 +23,6 @@ Developers love Cloud Run, Google Cloud's serverless runtime, for its simplicity
 - [**QUICKSTART_GUIDE.md**](./QUICKSTART_GUIDE.md) - Get running in 30 minutes
 - [**hackathon-agent/**](./hackathon-agent/) - Complete working agent and deployment files
 
-## 🎯 Core Requirements
-
-You must complete these three requirements to be eligible for judging:
-
-### 1. 🤖 Deploy LLM to Cloud Run with GPU
-
-- Deploy one of the supported models (Gemma 3, DeepSeek-r1, Llama 2, SDXL, etc.) to Cloud Run using GPU acceleration
-- Use secure authentication (recommended) or public access
-- Test and verify the deployment works
-
-### 2. 🔧 Build an Agentic Application
-
-- Create an agentic AI application using any framework (ADK, LangChain, CrewAI, etc.)
-- Integrate with your deployed LLM or other AI services
-- Add autonomous behavior and decision-making capabilities
-- Focus on solving real-world problems
-
-### 3. 🚀 Deploy Application to Cloud Run
-
-- Deploy your agentic application to Cloud Run
-- Ensure it's accessible via web interface or API
-- Include monitoring and observability
-
 ## 🎨 Project Ideas
 
 _Build agentic applications using any framework you prefer (ADK, LangChain, CrewAI, AutoGen, or your own)_
