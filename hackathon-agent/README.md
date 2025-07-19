@@ -53,7 +53,7 @@ The agent will be available at:
 # Deploy the agent to Cloud Run
 gcloud run deploy hackathon-agent \
     --source . \
-    --region us-central1 \
+    --region europe-west1 \
     --no-allow-unauthenticated \
     --set-env-vars GEMMA_URL=https://your-gemma-service-url
 
