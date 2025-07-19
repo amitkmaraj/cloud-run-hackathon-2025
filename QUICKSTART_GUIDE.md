@@ -15,7 +15,7 @@ gcloud config set project $PROJECT_ID
 gcloud config set run/region europe-west1
 
 # 3. Enable required APIs
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com aiplatform.googleapis.com
 ```
 
 ## 🤖 Deploy A Pre-Built Gemma LLM Container (10-15 minutes)
