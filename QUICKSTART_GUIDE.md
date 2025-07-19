@@ -45,7 +45,29 @@ export GEMMA_URL=$(gcloud run services describe SERVICE_NAME --format='value(sta
 echo "🎉 Gemma deployed at: $GEMMA_URL"
 ```
 
-💡 **Want to explore other Gemma deployment options?** Check out the [Gemma on Cloud Run Cookbook](https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md) for different model sizes and deployment configurations.
+💡 **Want to explore other Gemma deployment options?** Here are all the supported models, so far:
+
+```
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3-1b
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3-12b
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3-27b
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3n-e2b
+us-docker.pkg.dev/cloudrun/container/gemma/gemma3n-e4b
+```
+
+Note, When testing the endpoint, you should use the following `model: "gemma-string"` when interacting with the deployed Gemma service:
+
+
+```
+gemma3-1b = gemma3:1b
+gemma3-4b = gemma3:4b
+gemma3-12b = gemma3:12b
+gemma3-27b = gemma3:27b
+gemma3n-e2b = gemma3n:e2b
+gemma3n-e4b = gemma3n:e4b
+```
+
 
 ## 🧪 Test Gemma Service (5 minutes)
 
