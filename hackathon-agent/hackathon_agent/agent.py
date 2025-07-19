@@ -281,6 +281,6 @@ root_agent = Agent(
         1. Answering questions and providing information on various topics
         2. Generating code in different programming languages
         3. Brainstorming creative ideas for projects
-        4. Explaining complex concepts at different levels of detail"""
+        4. Explaining complex concepts at different levels of detail""",
     tools=[],
 ) 
