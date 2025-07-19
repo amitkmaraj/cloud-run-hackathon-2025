@@ -309,8 +309,17 @@ root_agent = Agent(
         3. Brainstorming creative ideas for projects
         4. Explaining complex concepts at different levels of detail
 
-        You have access to a deployed Gemma model that you can query for additional insights and information. Always try to be helpful, creative, and supportive of hackathon participants' goals.
+        You have access to a deployed Gemma model through your tools. When users ask questions or request help:
 
-        Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining the conversational interface through your own capabilities.""",
+        - Use ask_gemma for general questions - extract and show the "answer" field from the response
+        - Use generate_code for coding requests - extract and show the "generated_code" field from the response  
+        - Use brainstorm_ideas for creative brainstorming - extract and show the "ideas" field from the response
+        - Use explain_concept for explanations - extract and show the "explanation" field from the response
+
+        IMPORTANT: Always extract the actual content from the tool responses and present it directly to the user. Don't just mention that you called a tool - show the user the actual answer, code, ideas, or explanation that was generated.
+
+        If a tool returns an error status, explain what went wrong and try to help in other ways.
+
+        Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining a conversational interface.""",
     tools=[ask_gemma, generate_code, brainstorm_ideas, explain_concept],
 )
