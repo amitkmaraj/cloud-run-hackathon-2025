@@ -72,62 +72,6 @@ curl -H "Authorization: Bearer ${TOKEN}" \
   "https://your-hackathon-agent-url/adk"
 ```
 
-## Usage Examples
-
-### Using the Web Interface
-
-Visit `/adk` on your deployed service to interact with the agent through a web interface.
-
-### Using the API
-
-#### Ask Gemma
-
-```bash
-curl -X POST "/api/tools/ask_gemma" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "What is serverless computing?",
-    "context": "I'm building a web application"
-  }'
-```
-
-#### Generate Code
-
-```bash
-curl -X POST "/api/tools/generate_code" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "description": "Create a function that calculates the factorial of a number",
-    "language": "python"
-  }'
-```
-
-#### Brainstorm Ideas
-
-```bash
-curl -X POST "/api/tools/brainstorm_ideas" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "topic": "AI-powered mobile apps",
-    "num_ideas": 3
-  }'
-```
-
-#### Explain Concept
-
-```bash
-curl -X POST "/api/tools/explain_concept" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "concept": "machine learning",
-    "level": "beginner"
-  }'
-```
-
-## Environment Variables
-
-- `GEMMA_URL`: URL of your deployed Gemma model service (required)
-- `PORT`: Port to run the server on (default: 8080)
 
 ## Architecture
 
