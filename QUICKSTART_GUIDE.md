@@ -103,7 +103,7 @@ cat > .env << EOF
 GEMMA_URL=$GEMMA_URL
 GOOGLE_CLOUD_PROJECT=your-project-id
 GOOGLE_CLOUD_LOCATION=us-central1
-GOOGLE_GENAI_USE_VERTEXAI=FALSE
+GOOGLE_GENAI_USE_VERTEXAI=TRUE
 EOF
 
 echo "⚠️  Please edit .env file and update the following values:"
