@@ -110,6 +110,7 @@ echo "   - GOOGLE_CLOUD_PROJECT: Set to your actual project ID"
 echo "   - GEMMA_URL: Already set to $GEMMA_URL"
 
 # 3. Export environment variables from .env file
+cd hackathon_agent
 export $(cat .env | xargs)
 
 # 4. Deploy to Cloud Run (secure by default)
