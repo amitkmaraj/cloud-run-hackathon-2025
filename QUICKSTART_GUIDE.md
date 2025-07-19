@@ -18,62 +18,30 @@ gcloud config set run/region europe-west1
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 ```
 
-## 🤖 Create a Dockerfile (2 minutes)
-
-Create a directory for the Ollama service and change your working directory to this new directory:
-
-```bash
-mkdir ollama-backend
-cd ollama-backend
-```
-
-Create a `Dockerfile` file with the following contents:
-
-```python
-FROM ollama/ollama:latest
-
-# Listen on all interfaces, port 8080
-ENV OLLAMA_HOST 0.0.0.0:8080
-
-# Store model weight files in /models
-ENV OLLAMA_MODELS /models
-
-# Reduce logging verbosity
-ENV OLLAMA_DEBUG false
-
-# Never unload model weights from the GPU
-ENV OLLAMA_KEEP_ALIVE -1
-
-# Store the model weights in the container image
-ENV MODEL gemma3:1b
-RUN ollama serve & sleep 5 && ollama pull $MODEL
-
-# Start Ollama
-ENTRYPOINT ["ollama", "serve"]
-```
-
-## 🤖 Deploy Your Gemma LLM (10-15 minutes)
+## 🤖 Deploy A Pre-Built Gemma LLM Container (10-15 minutes)
 
 ```bash
 # Deploy Gemma 3-1B directly to Cloud Run with one command (secure by default)
-gcloud run deploy gemma-service \
-    --source . \
+gcloud run deploy SERVICE_NAME \
+    --image us-docker.pkg.dev/cloudrun/container/gemma/GEMMA_PARAMETER \
     --concurrency 4 \
     --cpu 8 \
-    --set-env-vars OLLAMA_NUM_PARALLEL=4 \
     --gpu 1 \
     --gpu-type nvidia-l4 \
     --max-instances 1 \
     --memory 32Gi \
-    --allow-unauthenticated \
+    --no-allow-unauthenticated \
     --no-cpu-throttling \
-    --no-gpu-zonal-redundancy \
     --timeout=600 \
-    --region europe-west1 \
+    --region REGION \
     --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
+# SERVICE_NAME = anything-you-want
+# GEMMA_PARAMETER = gemma3:4b
+# REGION = europe-west1
+
 # Get your Gemma URL
-export GEMMA_URL=$(gcloud run services describe gemma-service --format='value(status.url)')
+export GEMMA_URL=$(gcloud run services describe SERVICE_NAME --format='value(status.url)')
 echo "🎉 Gemma deployed at: $GEMMA_URL"
 ```
 
