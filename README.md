@@ -8,9 +8,9 @@ Welcome to the **Agentic AI App Hackathon with Google Cloud Run GPUs**! Join us 
 
 The agent now supports the connection to the deployed Gemma service, utilizing the python requests library. Feel free to take a look at the changes through the following commits and integrate within your agentic application. Good luck! 
 
-Commit: [Update to use python requests package](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/6c52d13808a5d74acfd0eb4b49b1f87e7198b3e4)
-Commit: [Update the payload and URL](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/102d4567eaba1d2e2bbf43680974dc26efd325f6)
-Commit: [Update the Agent prompt to support the response from Gemma](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/6f0c51bc99bf100cbf393e97d66f5b970783905e)
+- Commit: [Update to use python requests package](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/6c52d13808a5d74acfd0eb4b49b1f87e7198b3e4)
+- Commit: [Update the payload and URL](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/102d4567eaba1d2e2bbf43680974dc26efd325f6)
+- Commit: [Update the Agent prompt to support the response from Gemma](https://github.com/amitkmaraj/cloud-run-hackathon-2025/commit/6f0c51bc99bf100cbf393e97d66f5b970783905e)
 
 ---
 
