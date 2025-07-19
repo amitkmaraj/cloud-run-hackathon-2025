@@ -37,7 +37,7 @@ gcloud run deploy SERVICE_NAME \
     --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
 # SERVICE_NAME = anything-you-want
-# GEMMA_PARAMETER = gemma3:4b
+# GEMMA_PARAMETER = gemma3-4b
 # REGION = europe-west1
 
 # Get your Gemma URL
@@ -61,7 +61,7 @@ In a separate terminal tab, test the service:
 ```bash
 # Send a request to test the Gemma service
 curl http://localhost:9090/api/generate -d '{
-  "model": "gemma3n:e4b",
+  "model": "gemma3:4b",
   "prompt": "Why is the sky blue?"
 }'
 ```
