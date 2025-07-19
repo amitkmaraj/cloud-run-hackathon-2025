@@ -75,7 +75,7 @@ Before deploying the hackathon agent, let's test the Gemma service to make sure 
 
 ```bash
 # Start the proxy (choose Y when prompted to install cloud-run-proxy component)
-gcloud run services proxy gemma-service --port=9090
+gcloud run services proxy SERVICE_NAME --port=9090
 ```
 
 In a separate terminal tab, test the service:
