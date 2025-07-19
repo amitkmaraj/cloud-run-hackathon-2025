@@ -34,6 +34,7 @@ gcloud run deploy SERVICE_NAME \
     --no-cpu-throttling \
     --timeout=600 \
     --region REGION \
+    --no-gpu-zonal-redundancy \
     --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
 # SERVICE_NAME = anything-you-want
@@ -125,7 +126,7 @@ gcloud run deploy hackathon-agent \
     --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI
 
 # 5. Get your agent URL
-export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-central1 --format='value(status.url)')
+export AGENT_URL=$(gcloud run services describe hackathon-agent --region=REGION --format='value(status.url)')
 echo "🎉 Agent deployed at: $AGENT_URL"
 ```
 

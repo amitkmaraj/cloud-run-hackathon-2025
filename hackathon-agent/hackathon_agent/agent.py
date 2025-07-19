@@ -32,9 +32,8 @@ load_dotenv(dotenv_path=dotenv_path)
 class GemmaClient:
     """Client for interacting with the deployed Gemma model using GenAI SDK."""
 
-    def __init__(self, gemma_url: str, api_key: str):
+    def __init__(self, gemma_url: str):
         self.gemma_url = gemma_url.rstrip('/')
-        self.api_key = api_key
         self.model_name = "gemma-3n-e4b-it"
         
         # Get authentication headers for Cloud Run service-to-service calls
@@ -44,7 +43,6 @@ class GemmaClient:
         
         # Configure the client to use Cloud Run endpoint with authentication headers
         self.client = genai.Client(
-            api_key=self.api_key,
             http_options=HttpOptions(
                 base_url=self.gemma_url,
                 headers=auth_headers
@@ -101,14 +99,11 @@ def get_gemma_client() -> GemmaClient:
     global gemma_client
     if gemma_client is None:
         gemma_url = os.getenv("GEMMA_URL")
-        api_key = os.getenv("GOOGLE_API_KEY")
         
         if not gemma_url:
             raise ValueError("GEMMA_URL environment variable is required")
-        if not api_key:
-            raise ValueError("GOOGLE_API_KEY environment variable is required")
             
-        gemma_client = GemmaClient(gemma_url, api_key)
+        gemma_client = GemmaClient(gemma_url)
     return gemma_client
 
 
