@@ -81,12 +81,10 @@ GEMMA_URL=$GEMMA_URL
 GOOGLE_CLOUD_PROJECT=your-project-id
 GOOGLE_CLOUD_LOCATION=us-central1
 GOOGLE_GENAI_USE_VERTEXAI=FALSE
-GOOGLE_API_KEY=your-google-api-key
 EOF
 
 echo "⚠️  Please edit .env file and update the following values:"
 echo "   - GOOGLE_CLOUD_PROJECT: Set to your actual project ID"
-echo "   - GOOGLE_API_KEY: Set to your actual Google API key"
 echo "   - GEMMA_URL: Already set to $GEMMA_URL"
 
 # 3. Export environment variables from .env file
@@ -101,8 +99,7 @@ gcloud run deploy hackathon-agent \
     --set-env-vars GEMMA_URL=$GEMMA_URL \
     --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT \
     --set-env-vars GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION \
-    --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI \
-    --set-env-vars GOOGLE_API_KEY=$GOOGLE_API_KEY
+    --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI
 
 # 5. Get your agent URL
 export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-central1 --format='value(status.url)')
