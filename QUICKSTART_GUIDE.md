@@ -21,7 +21,7 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com
 ## 🤖 Deploy A Pre-Built Gemma LLM Container (10-15 minutes)
 
 ```bash
-# Deploy Gemma 3-1B directly to Cloud Run with one command (secure by default)
+# Deploy Gemma 3-4B directly to Cloud Run with one command (secure by default)
 gcloud run deploy SERVICE_NAME \
     --image us-docker.pkg.dev/cloudrun/container/gemma/GEMMA_PARAMETER \
     --concurrency 4 \
@@ -30,7 +30,7 @@ gcloud run deploy SERVICE_NAME \
     --gpu-type nvidia-l4 \
     --max-instances 1 \
     --memory 32Gi \
-    --no-allow-unauthenticated \
+    --allow-unauthenticated \
     --no-cpu-throttling \
     --timeout=600 \
     --region REGION \
