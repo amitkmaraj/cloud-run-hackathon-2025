@@ -65,10 +65,11 @@ gcloud run deploy gemma-service \
     --gpu-type nvidia-l4 \
     --max-instances 1 \
     --memory 32Gi \
-    --no-allow-unauthenticated \
+    --allow-unauthenticated \
     --no-cpu-throttling \
     --no-gpu-zonal-redundancy \
     --timeout=600 \
+    --region europe-west1 \
     --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
 # Get your Gemma URL
@@ -126,8 +127,8 @@ export $(cat .env | xargs)
 # 4. Deploy to Cloud Run (secure by default)
 gcloud run deploy hackathon-agent \
     --source . \
-    --region us-central1 \
-    --no-allow-unauthenticated \
+    --region europe-west1 \
+    --allow-unauthenticated \
     --memory=4Gi \
     --set-env-vars GEMMA_URL=$GEMMA_URL \
     --set-env-vars GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT \
