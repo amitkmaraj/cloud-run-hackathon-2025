@@ -34,7 +34,7 @@ class GemmaClient:
 
     def __init__(self, gemma_url: str):
         self.gemma_url = gemma_url.rstrip('/')
-        self.model_name = "gemma-3n-e4b-it"
+        self.model_name = "gemma3:4b"
         
         # Get authentication headers for Cloud Run service-to-service calls
         self.auth_headers = self._get_auth_headers()
@@ -67,17 +67,21 @@ class GemmaClient:
             print("gemma url", self.gemma_url)
             print("using model", self.model_name)
             
-            # Prepare the request payload
+            # Prepare the request payload to match the working curl format
             payload = {
-                "model": self.model_name,
-                "contents": [prompt],
-                "config": {
-                    "temperature": temperature
-                }
+                "contents": [
+                    {
+                        "parts": [
+                            {
+                                "text": prompt
+                            }
+                        ]
+                    }
+                ]
             }
             
-            # Make the HTTP request to the Gemma endpoint
-            endpoint_url = f"{self.gemma_url}/v1/models/generate_content"
+            # Make the HTTP request to the correct Gemma endpoint
+            endpoint_url = f"{self.gemma_url}/v1beta/models/{self.model_name}:generateContent"
             response = requests.post(
                 endpoint_url,
                 headers=self.auth_headers,
@@ -91,14 +95,14 @@ class GemmaClient:
             response_data = response.json()
             
             # Extract text from response (adjust based on actual Gemma API response format)
-            if 'text' in response_data:
-                return response_data['text']
-            elif 'candidates' in response_data and response_data['candidates']:
+            if 'candidates' in response_data and response_data['candidates']:
                 candidate = response_data['candidates'][0]
                 if 'content' in candidate and 'parts' in candidate['content']:
                     parts = candidate['content']['parts']
                     if parts and 'text' in parts[0]:
                         return parts[0]['text']
+            elif 'text' in response_data:
+                return response_data['text']
             elif 'response' in response_data:
                 return response_data['response']
             
