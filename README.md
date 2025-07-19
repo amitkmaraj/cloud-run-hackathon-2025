@@ -2,6 +2,14 @@
 
 Welcome to the **Agentic AI App Hackathon with Google Cloud Run GPUs**! Join us for a two-day hackathon event to build and deploy your own agentic applications on Google Cloud with Cloud Run, leveraging open models hosted on Cloud Run's serverless NVIDIA L4 GPUs.
 
+---
+
+## UPDATE Notice - Jul. 19 7:30PM
+
+The agent now supports the connection to the deployed Gemma service, utilizing the python requests library. Feel free to take a look at the changes through the most recent 2 commits and integrate within your agentic application. Good luck! 
+
+---
+
 ## 🎯 What You'll Build
 
 Build and deploy agentic applications on Google Cloud with Cloud Run, leveraging these open models hosted on Cloud Run's serverless NVIDIA L4 GPUs:
