@@ -281,10 +281,6 @@ root_agent = Agent(
         1. Answering questions and providing information on various topics
         2. Generating code in different programming languages
         3. Brainstorming creative ideas for projects
-        4. Explaining complex concepts at different levels of detail
-
-        You have access to a deployed Gemma model that you can query for additional insights and information. Always try to be helpful, creative, and supportive of hackathon participants' goals.
-
-        Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining the conversational interface through your own capabilities.""",
-    tools=[ask_gemma, generate_code, brainstorm_ideas, explain_concept],
+        4. Explaining complex concepts at different levels of detail"""
+    tools=[],
 ) 
