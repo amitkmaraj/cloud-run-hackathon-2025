@@ -13,11 +13,11 @@
 # limitations under the License.
 
 import os
+import json
 from pathlib import Path
 from typing import Dict, Any
 
-from google import genai
-from google.genai.types import HttpOptions
+import requests
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 import google.auth.transport.requests
@@ -30,24 +30,16 @@ load_dotenv(dotenv_path=dotenv_path)
 
 
 class GemmaClient:
-    """Client for interacting with the deployed Gemma model using GenAI SDK."""
+    """Client for interacting with the deployed Gemma model using direct HTTP requests."""
 
     def __init__(self, gemma_url: str):
         self.gemma_url = gemma_url.rstrip('/')
         self.model_name = "gemma-3n-e4b-it"
         
         # Get authentication headers for Cloud Run service-to-service calls
-        auth_headers = self._get_auth_headers()
+        self.auth_headers = self._get_auth_headers()
 
-        print("auth headers", auth_headers)
-        
-        # Configure the client to use Cloud Run endpoint with authentication headers
-        self.client = genai.Client(
-            http_options=HttpOptions(
-                base_url=self.gemma_url,
-                headers=auth_headers
-            )
-        )
+        print("auth headers", self.auth_headers)
 
     def _get_auth_headers(self) -> Dict[str, str]:
         """Get authentication headers for Cloud Run service-to-service calls."""
@@ -70,22 +62,52 @@ class GemmaClient:
         return headers
 
     def query_gemma(self, prompt: str, temperature: float = 0.7) -> str:
-        """Query the deployed Gemma model."""
+        """Query the deployed Gemma model using direct HTTP requests."""
         try:
             print("gemma url", self.gemma_url)
             print("using model", self.model_name)
             
-            # Generate content using the GenAI SDK
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=[prompt],
-                config=genai.types.GenerateContentConfig(
-                    temperature=temperature
-                )
+            # Prepare the request payload
+            payload = {
+                "model": self.model_name,
+                "contents": [prompt],
+                "config": {
+                    "temperature": temperature
+                }
+            }
+            
+            # Make the HTTP request to the Gemma endpoint
+            endpoint_url = f"{self.gemma_url}/v1/models/generate_content"
+            response = requests.post(
+                endpoint_url,
+                headers=self.auth_headers,
+                json=payload,
+                timeout=30
             )
             
-            return response.text if response.text else "No response from model"
+            response.raise_for_status()  # Raise an exception for HTTP error status codes
             
+            # Parse the response
+            response_data = response.json()
+            
+            # Extract text from response (adjust based on actual Gemma API response format)
+            if 'text' in response_data:
+                return response_data['text']
+            elif 'candidates' in response_data and response_data['candidates']:
+                candidate = response_data['candidates'][0]
+                if 'content' in candidate and 'parts' in candidate['content']:
+                    parts = candidate['content']['parts']
+                    if parts and 'text' in parts[0]:
+                        return parts[0]['text']
+            elif 'response' in response_data:
+                return response_data['response']
+            
+            return "No response from model"
+            
+        except requests.exceptions.RequestException as e:
+            return f"HTTP request error: {str(e)}"
+        except json.JSONDecodeError as e:
+            return f"JSON decode error: {str(e)}"
         except Exception as e:
             return f"Error querying Gemma: {str(e)}"
 
@@ -281,6 +303,10 @@ root_agent = Agent(
         1. Answering questions and providing information on various topics
         2. Generating code in different programming languages
         3. Brainstorming creative ideas for projects
-        4. Explaining complex concepts at different levels of detail""",
-    tools=[],
-) 
+        4. Explaining complex concepts at different levels of detail
+
+        You have access to a deployed Gemma model that you can query for additional insights and information. Always try to be helpful, creative, and supportive of hackathon participants' goals.
+
+        Your tools connect to a deployed Gemma model, so you can provide rich, detailed responses powered by that model while maintaining the conversational interface through your own capabilities.""",
+    tools=[ask_gemma, generate_code, brainstorm_ideas, explain_concept],
+)
